@@ -13,8 +13,13 @@ const express = require('express');
 //set up express App
 const app = express();
 
-//requiring & using the routes in express App
+//set up template engine
+app.set('view engine','ejs');
+
+app.use(express.static('./'));
+//requiring & using the routes in express App by initializing it
 app.use('/api',require('./routes/api'));
+
 //listen for requests by setting up the port number
 app.listen(4000, function(){
 console.log('now listening');
