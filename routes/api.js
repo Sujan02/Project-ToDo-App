@@ -15,13 +15,40 @@ const mongoose = require('mongoose');
 //creating express router to handle routes
 const router = express.Router();
 //const router = app.Router();
+//using filesystem to read and write the data
+const fs = require('fs');
+//using jsonfile module
+//const jsonfile = require('jsonfile');
+
 
 
 //connect to the database
+//mongoose.connect('mongodb://test:test12@ds033907.mlab.com:33907/todo');
 
-//dummy data on the server, & will be passed to the todo view
-var data = [{item: 'get Milk'}, {item: 'walk dog'}, {item: 'complete certification'}];
+//const file = './todoLists';//dummy data on the server, & will be passed to the todo view
+/*
+var data = fs.readFile('./routes/data.json', function(err, data){
+  if(err){
+    console.error(err);
+  }
+  JSON.parse(data);
+  //console.log(JSON.parse(data));
+});
+*/
 
+//const obj = data;
+//JSON.stringify(data, null, 2);
+//create a schema
+/*var todoSchema = new mongoose.Schema({
+  item: String
+});
+
+var Todo = mongoose.model('Todo', todoSchema);
+
+var itemOne = Todo ({ item: 'Learn Node.js'}).save(function(err,itemOne){
+  if(err) throw err;
+  console.log('item saved successfully');
+});*/
 //create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -31,8 +58,18 @@ router.get('/todolists',function(req, res){
 //  res.end();//this will end the request
   //res.send({type: 'GET'});//this will send the response back to the browser with name property
   //res.render('todo');
+// parsing json data
+var data = fs.readFileSync('./routes/data.json','utf-8');/* function(err, data){
+  if(err){
+    console.error(err);
+  }
+//  JSON.parse(data);*/
+    res.render('todo', {todos: JSON.parse(data)});
+  //console.log(JSON.parse(data));
+//});
+
   //after adding the data outputing interval
-  res.render('todo', {todos: data});//'todo' is the view and the array in data is passed to that
+//  res.render('todo', {todos: data});//'todo' is the view and the array in data is passed to that
 });
 
 //Route by ID -- replacing router with app
@@ -51,8 +88,14 @@ router.get('/todolists',function(req, res){
 //add a new todo list task
 router.post('/todolists', urlencodedParser ,function(req, res){
   //res.send({type: 'POST'});//this will send the response back to the browser with name property
+  //fs.writeFile('writeMe.txt', data);
  data.push(req.body);
  res.json(data);
+ //fs.writeFile('writeMe.txt', data, () => {});
+//console.log(data);
+/*jsonfile.writeFile(file, obj, function(err){
+  if(err) console.error(err);
+});*/
 });
 
 //update existing todo list task
